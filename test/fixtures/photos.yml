@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  image: MyString
+  comments_count: 1
+  likes_count: 1
+  caption: MyText
+  owner: one
+
+two:
+  image: MyString
+  comments_count: 1
+  likes_count: 1
+  caption: MyText
+  owner: two
