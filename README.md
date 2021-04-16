@@ -391,4 +391,4 @@ before_action :authenticate_user!
 
 ### Interface
 
-Now: make an interface that you like, perhaps something similar to this](https://photogram-final-target.herokuapp.com/).
+Now: make an interface that you like, perhaps something [similar to this](https://photogram-final-target.herokuapp.com/).
