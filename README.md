@@ -341,7 +341,7 @@ Notes:
     ```
 
     Then, in your `sample_data` task, you need not worry about accidentally creating duplicates; your validation has your back.
- - You can [use scopes in your associations](https://guides.rubyonrails.org/active_record_querying.html#scopes). Combined with indirect associations, you can do some very powerful stuff. As you're writing your sample data task, re-evaluate the associations you wrote. Can you define a single `has_many` that:
+ - You can [use scopes in your associations](https://remimercier.com/scoped-active-record-associations/). Combined with indirect associations, you can do some very powerful stuff. As you're writing your sample data task, re-evaluate the associations you wrote. Can you define a single `has_many` that:
      - returns all of a user's accepted sent follow requests?
      - returns a user's `leaders` (recipients of accepted sent follow requests)?
      - returns a user's `feed` (photos posted by a user's leaders)?
