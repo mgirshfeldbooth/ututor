@@ -184,7 +184,7 @@ A handy option to add to `belongs_to` is `:counter_cache`: [read about it](https
 
 ##### has_many
 
-Then, go through and add their other halves — corresponding `has_many` declarations.
+Then, go through and add their other halves — corresponding `has_many` declarations.
 
 For example:
 
@@ -206,7 +206,7 @@ In standard Rails applications, the default is opposite: `belongs_to` adds an au
 
 So: if you decided to _remove_ the `null: true` database constraint from any of your foreign key columns, then you should also _add_ the `optional: true` option to the corresponding `belongs_to` association accessor.
 
-So remember — if you're ever in the situation of:
+So remember — if you're ever in the situation of:
 
  - you're trying to save a record
  - the save is failing
@@ -330,7 +330,7 @@ Notes:
     ```
 
     The above will automatically set the value of the foreign key column, in this case `owner_id`. Handy! There's also a `build` method that is similar to `new`; it will instantiate the object but won't save it yet. `create` instantiates and saves all at once.
- - When writing sample data, if you feel the urge to write logic to enforce some rules about the validity of the data that you're creating, then it might be a sign that you are missing some validations. (This is one is the biggest benefits of going through the exercise of writing the `sample_data` tasks — it reveals missing validations.)
+ - When writing sample data, if you feel the urge to write logic to enforce some rules about the validity of the data that you're creating, then it might be a sign that you are missing some validations. (This is one is the biggest benefits of going through the exercise of writing the `sample_data` tasks — it reveals missing validations.)
 
     For example, when writing the Ruby to create a few likes, were you tempted to write a conditional to make sure that the same user didn't like the same photo multiple times? Then you probably forgot a validation:
 
