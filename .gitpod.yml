@@ -1,4 +1,4 @@
-image: jelaniwoods/appdev2021-vanilla-rails@sha256:70bfa7e2fb51d3f9466974fe857812bfccb061504771639bc88e1abea9ed44fc
+image: jelaniwoods/appdev2021-vanilla-rails@sha256:bea76bdd790570760b07d1d3d5d54d9c8620914b05ddce6bc71afb7eba907f6c
 
 tasks:
   - init: bin/setup
