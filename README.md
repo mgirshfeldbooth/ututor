@@ -2,6 +2,10 @@
 
 In this project, we'll rebuild Photogram once more, but we'll do it without cutting any corners — we'll use database indexes and constraints, advanced association accessors, scopes, validations, view helper methods like `link_to` and `form_with` everywhere, partials to DRY up code judiciously, the Devise gem for authentication and password reset emails, authorizing access to each action explicitly, and many other industrial-strength upgrades.
 
+## Target
+
+[Here is a rough target to work towards.](https://pg-industrial-2-final.herokuapp.com/)
+
 ## Add collaborators
 
 As we work on this project, we're also going to practice using Git, providing and receiving Code Review.
