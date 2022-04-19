@@ -395,4 +395,4 @@ before_action :authenticate_user!
 
 ### Interface
 
-Now: make an interface that you like, perhaps something [similar to this](https://photogram-final-target.herokuapp.com/).
+Now: improve the interface to look nicer. Make up your own, or take inspiration from [this target](https://pg-industrial-2-final.herokuapp.com/).
