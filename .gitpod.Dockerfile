@@ -71,7 +71,7 @@ RUN echo "rvm_gems_path=/home/gitpod/.rvm" > ~/.rvmrc
 
 USER gitpod
 # AppDev stuff
-RUN /bin/bash -l -c "gem install htmlbeautifier rufo -N"
+RUN /bin/bash -l -c "gem install htmlbeautifier rufo solargraph -N"
 
 # Install Google Chrome
 RUN sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | \
@@ -136,10 +136,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash - \
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
     && sudo apt-get update \
-    && sudo apt-get install -y yarn
+    && sudo apt-get install -y yarn \
+    && sudo npm install -g n \
+    && sudo n stable \
+    && hash -r
 
-# Install fuser and expect
-RUN sudo apt install -y libpq-dev psmisc lsof expect
+# Install fuser
+RUN sudo apt install -y libpq-dev psmisc lsof
 
 # Install JS dependencies
 COPY package.json /base-rails/package.json
@@ -192,3 +195,4 @@ PS1='\[]0;\u \w\]\[[01;32m\]\u\[[00m\] \[[01;34m\]\w\[[00m\]\[\e[0;38;5;19
 # Hack to pre-install bundled gems
 RUN echo "rvm use 3.0.3" >> ~/.bashrc
 RUN echo "rvm_silence_path_mismatch_check_flag=1" >> ~/.rvmrc
+RUN sudo apt-get update && sudo apt-get install yarn
