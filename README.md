@@ -35,7 +35,7 @@ For user accounts, we're going to use the Devise gem rather than the `draft:acco
       - Remember to define a root route soon; we don't have one to use yet, but `root "photos#index"` will work soon.
   - Make a Git commit.
 
-[Read more about installing Devise here.](https://github.com/heartcombo/devise#getting-started)
+[Read more about installing Devise here.](https://chapters.firstdraft.com/chapters/880)
 
 #### Generate Devise model
 
