@@ -395,4 +395,4 @@ before_action :authenticate_user!
 
 ### Interface
 
-Now: improve the interface to look nicer. Make up your own, or take inspiration from [this target](https://pg-industrial-2-final.herokuapp.com/).
+Now: improve the interface to look nicer. Make up your own, or take inspiration from [this target](https://pg-industrial-2-final.herokuapp.com/). Note that that target is using Bootstrap version 4; the current version is 5. You can View Source for inspiration but I suggest trying to achieve equivalent results using v5 classes instead.
