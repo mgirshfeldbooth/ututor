@@ -10,7 +10,7 @@ In this project, we'll rebuild Photogram once more, but we'll do it without cutt
 
 As we work on this project, we're also going to practice using Git, providing and receiving Code Review.
 
-So first things first: click on the **Settings** tab of your repository, **Manage Access**, and add `raghubetina`, `jelaniwoods`, and `pmckernin` as collaborators.
+So first things first: click on the **Settings** tab of your repository, **Manage Access**, and add `raghubetina`, `rsfarzo`, and `jelaniwoods` as collaborators.
 
 [Here is a cheat sheet for our Git workflow.](https://gist.github.com/raghubetina/fb88a616ad071e7cbd8321378eb01808)
 
