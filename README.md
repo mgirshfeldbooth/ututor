@@ -231,6 +231,12 @@ class Photo
 end
 ```
 
+Some others to consider:
+
+- Leaders: For a user, retrieving the users that they follow.
+- Feed: For a user, retrieving the photos that have been posted by the users that they follow.
+- Discover: For a user, retrieving the photos that have been liked by the users that they follow.
+
 ### Validations
 
 Go through each model and add any validations that you think might come in handy. You could look at `db/schema.rb`, the ultimate authority on what columns are in your database at any given moment, but wasn't it nice when we had those automatically updated comments in our model files? Check out [the annotate gem](https://github.com/ctran/annotate_models) if you want that functionality.
