@@ -122,11 +122,12 @@ COPY Gemfile /base-rails/Gemfile
 COPY Gemfile.lock /base-rails/Gemfile.lock
 # For some reason, the copied files were owned by root so bundle could not succeed
 RUN /bin/bash -l -c "sudo chown -R $(whoami):$(whoami) Gemfile Gemfile.lock"
+RUN /bin/bash -l -c "mkdir gems && bundle config set --local path 'gems'"
 RUN /bin/bash -l -c "gem install bundler:2.2.32"
 
 RUN /bin/bash -l -c "bundle install"
 # Disable skylight dev warning
-RUN /bin/bash -l -c "skylight disable_dev_warning"
+RUN /bin/bash -l -c "bundle exec skylight disable_dev_warning"
 
 # Install Node and npm
 RUN curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash - \
@@ -195,4 +196,3 @@ PS1='\[]0;\u \w\]\[[01;32m\]\u\[[00m\] \[[01;34m\]\w\[[00m\]\[\e[0;38;5;19
 # Hack to pre-install bundled gems
 RUN echo "rvm use 3.0.3" >> ~/.bashrc
 RUN echo "rvm_silence_path_mismatch_check_flag=1" >> ~/.rvmrc
-RUN sudo apt-get update && sudo apt-get install yarn

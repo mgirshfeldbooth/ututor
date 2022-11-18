@@ -1,8 +1,8 @@
-image: jelaniwoods/appdev2022-helper-methods
+image: jelaniwoods/appdev2022-photogram-industrial-tmp2
 
 tasks:
-  - command: bundle install
-  - init: bin/setup
+  - before: |
+      bin/setup
 ports:
   - port: 3000
     onOpen: open-preview
