@@ -22,7 +22,7 @@
   "files.exclude": {
 		"**/.git": true,
 		".vscode": true,
-		".bundle": true
+		".bundle": true,
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
@@ -41,13 +41,13 @@
 		"editor.formatOnSave": true
   },
   "vscode-erb-beautify.keepBlankLines": 1,
+  "vscode-erb-beautify.bundlerPath": "/home/gitpod/.rvm/ruby-3.0.3/bin/bundler",
   "vscode-erb-beautify.useBundler": true,
   "ruby.intellisense": false,
   "gitpod.openInStable.neverPrompt": true,
   "redhat.telemetry.enabled": false,
-  "solargraph.useBundler": true,
   "rufo.useBundler": true,
   "emmet.includeLanguages": {
     "erb": "html"
-  }
+  },
 }
