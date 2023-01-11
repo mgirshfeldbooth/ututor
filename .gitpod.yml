@@ -8,6 +8,8 @@ ports:
   - port: 3000
     onOpen: open-preview
     visibility: public
+  - port: 9500-9999
+    onOpen: ignore
   - port: 5432
     onOpen: ignore
 
