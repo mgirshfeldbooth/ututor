@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Submission:</strong>
+  <%= @attempt.submission %>
+</p>
+
+<p>
+  <strong>Correct:</strong>
+  <%= @attempt.correct %>
+</p>
+
+<p>
+  <strong>Started at:</strong>
+  <%= @attempt.started_at %>
+</p>
+
+<p>
+  <strong>Finished at:</strong>
+  <%= @attempt.finished_at %>
+</p>
+
+<p>
+  <strong>Exercise:</strong>
+  <%= @attempt.exercise_id %>
+</p>
+
+<p>
+  <strong>Round:</strong>
+  <%= @attempt.round_id %>
+</p>
+
+<p>
+  <strong>Student:</strong>
+  <%= @attempt.student_id %>
+</p>
+
+<%= link_to 'Edit', edit_attempt_path(@attempt) %> |
+<%= link_to 'Back', attempts_path %>

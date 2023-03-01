@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Tutor:</strong>
+  <%= @plan.tutor_id %>
+</p>
+
+<p>
+  <strong>Student:</strong>
+  <%= @plan.student_id %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @plan.subject_id %>
+</p>
+
+<p>
+  <strong>Round size:</strong>
+  <%= @plan.round_size %>
+</p>
+
+<%= link_to 'Edit', edit_plan_path(@plan) %> |
+<%= link_to 'Back', plans_path %>

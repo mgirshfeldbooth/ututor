@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Question:</strong>
+  <%= @exercise.question %>
+</p>
+
+<p>
+  <strong>Answer:</strong>
+  <%= @exercise.answer %>
+</p>
+
+<p>
+  <strong>Difficulty:</strong>
+  <%= @exercise.difficulty %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @exercise.subject_id %>
+</p>
+
+<%= link_to 'Edit', edit_exercise_path(@exercise) %> |
+<%= link_to 'Back', exercises_path %>

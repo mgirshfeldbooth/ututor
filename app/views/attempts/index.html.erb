@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Attempts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Submission</th>
+      <th>Correct</th>
+      <th>Started at</th>
+      <th>Finished at</th>
+      <th>Exercise</th>
+      <th>Round</th>
+      <th>Student</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @attempts.each do |attempt| %>
+      <tr>
+        <td><%= attempt.submission %></td>
+        <td><%= attempt.correct %></td>
+        <td><%= attempt.started_at %></td>
+        <td><%= attempt.finished_at %></td>
+        <td><%= attempt.exercise_id %></td>
+        <td><%= attempt.round_id %></td>
+        <td><%= attempt.student_id %></td>
+        <td><%= link_to 'Show', attempt %></td>
+        <td><%= link_to 'Edit', edit_attempt_path(attempt) %></td>
+        <td><%= link_to 'Destroy', attempt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Attempt', new_attempt_path %>
