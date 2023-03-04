@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root "rounds#index"
 
+  resources :users, only: :show
+  
   devise_for :users
 
   resources :attempts
