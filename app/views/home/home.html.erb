@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+<div class="container" >
+  <div class="row" >
+    <div class="col-md-12 text-center fw-bold prompt1" >
+
+      Ready to play?
+   
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+    <%= form_with(url: rounds_path) do |form| %>
+    <%= form.label "How many exercises?" %>
+    <%= form.text_field "query_round_length" %>
+    <%= form.button "Go" %>
+    <% end %>
+
+    
+    <div>
+
+  </div>
+</div>
+
+</body>

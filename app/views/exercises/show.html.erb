@@ -1,3 +1,5 @@
+<div class="d-flex justify-content-center flex-column">
+<div class="container">
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -20,5 +22,49 @@
   <%= @exercise.subject_id %>
 </p>
 
+<p>
+  <strong>Streak:</strong>
+  <%= cookies.fetch(:streak_counter) %>
+</p>
+
+<p>
+  <strong>User Level:</strong>
+  <%= cookies.fetch(:user_level) %>
+</p>
+
+<form action="/attempts" method="post">
+
+  <%= hidden_field_tag "starting_timestamp", cookies.fetch(:attempt_started_at) %>
+
+  <div class="form-outline prompt2">
+    <label for="submission_box">
+      Your Answer: 
+    </label>
+    
+    <div>
+    <input type="text" id="submission_box" name="query_submission" autocomplete="off" autofocus>
+    </div>
+  </div>
+
+  <div>
+    <input type="hidden" id="user_id_box" name="query_user_id" value=<%= current_user.id %>>
+  </div>
+
+  <div>
+    <input type="hidden" id="exercise_id_box" name="query_exercise_id" value="<%= @exercise.id %>">
+  </div>
+
+  <div>
+    <input type="hidden" id="round_id_box" name="query_round_id" value="<%= cookies.fetch(:current_round) %>">
+  </div>
+
+  <br>
+  <button class="btn btn-dark btn-lg">
+    Submit
+  </button>
+</form>
+
 <%= link_to 'Edit', edit_exercise_path(@exercise) %> |
 <%= link_to 'Back', exercises_path %>
+</div>
+</div>
