@@ -1,6 +1,32 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <strong>Exercises:</strong>
+  <%= attempt_count = @round.attempts.count %>
+</p>
+<p>
+  <strong>Correct:</strong>
+  <%= @round.attempts.where( :correct => true ).count %>
+</p>
+<p>
+  <strong>Accuracy:</strong>
+  <%= (@round.attempts.where( :correct => true ).count.to_f * 100 / attempt_count).round(2) %>
+</p>
+<p>
+  <strong>Difficulty Reached:</strong>
+  <%= @round.exercises.maximum(:difficulty) %>
+</p>
+<p>
+<% start_to_finish = @round.attempts.last.finished_at - @round.attempts.first.started_at %>
+<strong>Total Time For Round: </strong>
+<%= start_to_finish.round(2).to_s + " seconds" %> 
+</p>
+<p>
+<strong>Average Time Per Exercise: </strong>
+<%= (start_to_finish / attempt_count).round(2).to_s + " seconds"  %>
+</p>
+
+<p>
   <strong>Student:</strong>
   <%= @round.student_id %>
 </p>

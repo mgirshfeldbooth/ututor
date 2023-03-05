@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  root "application#home"
+  post "/insert_round" => "rounds#create"
+
+  devise_for :users
+
   resources :attempts
   resources :rounds
   resources :plans

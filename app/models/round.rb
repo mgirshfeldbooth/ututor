@@ -18,4 +18,5 @@
 class Round < ApplicationRecord
   belongs_to :student, class_name: "User"
   has_many :attempts
+  has_many :exercises, :through => :attempts
 end

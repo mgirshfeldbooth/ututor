@@ -1,5 +1,6 @@
 class RoundsController < ApplicationController
   before_action :set_round, only: %i[ show edit update destroy ]
+  skip_forgery_protection
 
   # GET /rounds or /rounds.json
   def index
@@ -21,17 +22,28 @@ class RoundsController < ApplicationController
 
   # POST /rounds or /rounds.json
   def create
-    @round = Round.new(round_params)
+    @round = Round.new(student_id: current_user.id)
+
+    round_length = params.fetch("query_round_length")
+    # cookies.store(:attempts_left, round_length)
+    cookies[:attempts_left] = round_length
 
     respond_to do |format|
       if @round.save
-        format.html { redirect_to round_url(@round), notice: "Round was successfully created." }
+        format.html { redirect_to exercise_path(Exercise.where( :difficulty => 0 ).shuffle.first.id), notice: "Round was successfully created." }
         format.json { render :show, status: :created, location: @round }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @round.errors, status: :unprocessable_entity }
       end
     end
+
+    cookies[:user_level] = 0 
+    cookies[:streak_counter] = 0
+    cookies[:current_round] = @round.id
+    cookies[:round_started_at] = DateTime.now.change(:offset => "+500")
+    cookies[:attempt_started_at] = DateTime.now.change(:offset => "+500")
+    
   end
 
   # PATCH/PUT /rounds/1 or /rounds/1.json
