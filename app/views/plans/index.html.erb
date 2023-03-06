@@ -30,4 +30,20 @@
 
 <br>
 
+<%= form_with(url: plans_path) do |form| %>
+  <div class="form-outline prompt2">
+    <%= label_tag :submit_student, "Your Student's ID:"%>
+    <%= text_field_tag :query_student_id %>    
+    <br>
+    <%= label_tag :submit_subject, "Subject ID:"%>
+    <%= text_field_tag :query_subject_id %>  
+    <br>
+    <%= label_tag :submit_round_size, "Round Size:"%>  
+    <%= text_field_tag :query_round_size %>    
+    <br>
+  <%= button_tag "Submit", class: "btn btn-dark" %>
+
+  </div>
+<% end %>
+
 <%= link_to 'New Plan', new_plan_path %>
