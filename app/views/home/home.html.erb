@@ -9,7 +9,7 @@
   <div class="row" >
     <div class="col-md-12 text-center fw-bold prompt1" >
 
-      Ready to play?
+      Ready to play? Remember, go as FAST as you can!!!
    
     </div>
   </div>
@@ -19,7 +19,7 @@
     <%= form_with(url: rounds_path) do |form| %>
     <%= form.label "How many exercises?" %>
     <%= form.text_field "query_round_length" %>
-    <%= form.button "Go" %>
+    <%= form.button "Go", class: "btn btn-dark" %>
     <% end %>
 
     

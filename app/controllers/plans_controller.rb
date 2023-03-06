@@ -21,7 +21,11 @@ class PlansController < ApplicationController
 
   # POST /plans or /plans.json
   def create
-    @plan = Plan.new(plan_params)
+    @plan = Plan.new
+    @plan.tutor_id = current_user.id
+    @plan.student_id = params.fetch("query_student_id")
+    @plan.subject_id = params.fetch("query_subject_id")
+    @plan.round_size = params.fetch("query_round_size")
 
     respond_to do |format|
       if @plan.save

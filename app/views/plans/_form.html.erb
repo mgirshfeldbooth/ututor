@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= form.label :tutor_id %>
-    <%= form.text_field :tutor_id %>
+    <%= form.text_field :tutor_id, :value => current_user.id %>
   </div>
 
   <div class="field">

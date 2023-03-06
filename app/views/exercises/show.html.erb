@@ -32,37 +32,23 @@
   <%= cookies.fetch(:user_level) %>
 </p>
 
-<form action="/attempts" method="post">
-
+<%= form_with(url: attempts_path) do |form| %>
   <%= hidden_field_tag "starting_timestamp", cookies.fetch(:attempt_started_at) %>
 
   <div class="form-outline prompt2">
-    <label for="submission_box">
-      Your Answer: 
-    </label>
-    
-    <div>
-    <input type="text" id="submission_box" name="query_submission" autocomplete="off" autofocus>
-    </div>
-  </div>
+    <%= label_tag :submission_box, "Your Answer:"%>
 
-  <div>
-    <input type="hidden" id="user_id_box" name="query_user_id" value=<%= current_user.id %>>
-  </div>
+    <%= text_field_tag :query_submission %>    
+    <%= hidden_field_tag "query_user_id", current_user.id %>
+    <%= hidden_field_tag "query_exercise_id", @exercise.id %>
+    <%= hidden_field_tag "query_round_id", cookies.fetch(:current_round) %>
+  
 
-  <div>
-    <input type="hidden" id="exercise_id_box" name="query_exercise_id" value="<%= @exercise.id %>">
-  </div>
+  <%= button_tag "Submit", class: "btn btn-dark" %>
 
-  <div>
-    <input type="hidden" id="round_id_box" name="query_round_id" value="<%= cookies.fetch(:current_round) %>">
   </div>
+<% end %>
 
-  <br>
-  <button class="btn btn-dark btn-lg">
-    Submit
-  </button>
-</form>
 
 <%= link_to 'Edit', edit_exercise_path(@exercise) %> |
 <%= link_to 'Back', exercises_path %>
