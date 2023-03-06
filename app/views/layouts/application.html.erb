@@ -14,11 +14,17 @@
   
     <body>
       <%= render "shared/navbar" %>
-      <%= render "shared/flash" %>
+
       
-      <div class="container">
-        <%= yield %>
-      </div>
+    <div class="container">
+      <% if notice.present? %>
+        <%= render "shared/flash", message: notice, css_class: "success" %>
+      <% end %>
+      <% if alert.present? %>
+        <%= render "shared/flash", message: alert, css_class: "danger" %>
+      <% end %>
+      <%= yield %>
+    </div>
     </body>
 
 </html>
