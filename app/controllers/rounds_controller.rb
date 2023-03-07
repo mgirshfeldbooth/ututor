@@ -25,12 +25,12 @@ class RoundsController < ApplicationController
     @round = Round.new(student_id: current_user.id)
 
     round_length = params.fetch("query_round_length")
-    # cookies.store(:attempts_left, round_length)
     cookies[:attempts_left] = round_length
+    @assigned_subject_id = Plan.find_by(student_id: current_user.id).subject_id
 
     respond_to do |format|
       if @round.save
-        format.html { redirect_to exercise_path(Exercise.where( :difficulty => 0 ).shuffle.first.id), notice: "Round was successfully created." }
+        format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
         format.json { render :show, status: :created, location: @round }
       else
         format.html { render :new, status: :unprocessable_entity }
