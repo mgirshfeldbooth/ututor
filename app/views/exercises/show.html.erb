@@ -32,7 +32,7 @@
   <%= cookies.fetch(:user_level) %>
 </p>
 
-<%= form_with(url: attempts_path) do |form| %>
+<%= form_with(url: attempts_path ) do |form| %>
   <%= hidden_field_tag "starting_timestamp", cookies.fetch(:attempt_started_at) %>
 
   <div class="form-outline prompt2">

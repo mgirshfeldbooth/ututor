@@ -36,12 +36,12 @@ class AttemptsController < ApplicationController
     attempts_left = cookies.fetch(:attempts_left).to_i
     attempts_left -= 1
     cookies[:attempts_left] = attempts_left
-
+    @assigned_subject_id = Plan.find_by(student_id: current_user.id).subject_id
     
     respond_to do |format|
       if @attempt.save
         if (attempts_left != 0)
-          format.html { redirect_to exercise_path(Exercise.where( :difficulty => cookies.fetch(:user_level) ).shuffle.first.id), notice: "Attempt recorded!" }
+          format.html { redirect_to exercise_path(Exercise.where( :difficulty => cookies.fetch(:user_level), subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Attempt recorded!" }
           format.json { render :show, status: :created, location: @attempt }
         elsif (attempts_left == 0)
           format.html { redirect_to round_path(cookies.fetch(:current_round)), notice: "Attempt recorded and round complete!" }

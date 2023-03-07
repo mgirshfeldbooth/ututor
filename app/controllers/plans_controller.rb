@@ -1,5 +1,6 @@
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[ show edit update destroy ]
+  before_action :require_user_be_tutor
 
   # GET /plans or /plans.json
   def index
@@ -29,7 +30,7 @@ class PlansController < ApplicationController
 
     respond_to do |format|
       if @plan.save
-        format.html { redirect_to plan_url(@plan), notice: "Plan was successfully created." }
+        format.html { redirect_to root_path, notice: "Plan was successfully created." }
         format.json { render :show, status: :created, location: @plan }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +43,7 @@ class PlansController < ApplicationController
   def update
     respond_to do |format|
       if @plan.update(plan_params)
-        format.html { redirect_to plan_url(@plan), notice: "Plan was successfully updated." }
+        format.html { redirect_to root_path, notice: "Plan was successfully updated." }
         format.json { render :show, status: :ok, location: @plan }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,7 +57,7 @@ class PlansController < ApplicationController
     @plan.destroy
 
     respond_to do |format|
-      format.html { redirect_to plans_url, notice: "Plan was successfully destroyed." }
+      format.html { redirect_to root_path, notice: "Plan was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -70,5 +71,11 @@ class PlansController < ApplicationController
     # Only allow a list of trusted parameters through.
     def plan_params
       params.require(:plan).permit(:tutor_id, :student_id, :subject_id, :round_size)
+    end
+
+    def require_user_be_tutor
+      unless current_user.tutor?
+        redirect_back fallback_location: root_path
+      end
     end
 end
