@@ -1,6 +1,6 @@
 // import "./styles.css";
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion/dist/framer-motion";
 
@@ -78,21 +78,56 @@ const ValueInput = styled.input`
 
 const exercises = [
   {
-    desc: "1 + 1 = ?",
+    id: 1,
+    question: "1 + 1 = ?",
+    answer: "2",
     difficulty: 1,
-    answer: 1,
   },
   {
-    desc: "3 - 2 = ?",
+    id: 2,
+    question: "3 - 2 = ?",
+    answer: "1",
     difficulty: 1,
-    answer: 1,
   },
   {
-    desc: "4 * 2 = ?",
+    id: 3,
+    question: "4 * 2 = ?",
+    answer: "8",
     difficulty: 1,
-    answer: 8,
   },
 ];
+
+function QuizCard({ question, clickHandler }) {
+  return (
+    <Card
+      key={question.id}
+      initial={{
+        opacity: 0,
+        x: 100,
+      }}
+      animate={{
+        opacity: 1,
+        x: 0,
+        transition: { ease: "easeOut", duration: 0.3 },
+      }}
+      exit={{
+        opacity: 0,
+        x: -100,
+        transition: { ease: "easeIn", duration: 0.3 },
+      }}
+    >
+      <CardTitle>{question.question}</CardTitle>
+      <Subtitle>Difficulty: {question.difficulty}</Subtitle>
+      <ValueInput
+        type="text"
+        pattern="\d*"
+        placeholder="Enter answer..."
+        maxWidth={160}
+      />
+      <Button onClick={clickHandler}>Next</Button>
+    </Card>
+  );
+}
 
 export default function App() {
   // TODO:
@@ -105,7 +140,30 @@ export default function App() {
   const [showExercises, setShowExercises] = useState(false);
   const [showScore, setShowScore] = useState(false);
 
+  async function addRound(newRound) {
+    try {
+      const response = await window.fetch("/api/rounds", {
+        method: "POST",
+        body: JSON.stringify(newRound),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) throw Error(response.statusText);
+
+      const savedRound = await response.json();
+      // TODO: set exercises from our returned round
+      // const newExercises = [...exercises, savedRound];
+      // setExercises(newExercises);
+      // console.log("Round Added!");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   function handleShowExercises() {
+    // TODO: Make a request to backend
     setShowExercises(true);
   }
 
@@ -126,6 +184,11 @@ export default function App() {
     setNumberOfQuestions(event.target.valueAsNumber);
   }
 
+  useEffect(() => {
+    // TODO: Fetch exercises from API, either on page load or when # of exercises is POST
+    console.log(exercises);
+  }, []);
+
   return (
     <AppContainer>
       <MathleticsTitle>Mathletics</MathleticsTitle>
@@ -142,35 +205,10 @@ export default function App() {
       ) : (
         <AnimatePresence mode={"wait"}>
           {showExercises ? (
-            <Card
-              key={currentQuestion}
-              initial={{
-                opacity: 0,
-                x: 100,
-              }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                transition: { ease: "easeOut", duration: 0.3 },
-              }}
-              exit={{
-                opacity: 0,
-                x: -100,
-                transition: { ease: "easeIn", duration: 0.3 },
-              }}
-            >
-              <CardTitle>{exercises[currentQuestion].desc}</CardTitle>
-              <Subtitle>
-                Difficulty: {exercises[currentQuestion].difficulty}
-              </Subtitle>
-              <ValueInput
-                type="text"
-                pattern="\d*"
-                placeholder="Enter answer..."
-                maxWidth={160}
-              />
-              <Button onClick={handleNextClick}>Next</Button>
-            </Card>
+            <QuizCard
+              question={exercises[currentQuestion]}
+              clickHandler={handleNextClick}
+            />
           ) : (
             <Card
               initial={{

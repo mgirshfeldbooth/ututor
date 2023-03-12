@@ -10,5 +10,10 @@ Rails.application.routes.draw do
   resources :subjects
   resources :exercises
 
+  # Eventually move routes for our React app here
+  namespace :api do
+    resources :rounds, only: %i[create]
+  end
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
