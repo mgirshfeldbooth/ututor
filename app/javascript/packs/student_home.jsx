@@ -1,4 +1,3 @@
-import { createRoot } from "react-dom/client";
 // import "./styles.css";
 import styled from "@emotion/styled";
 import React from "react";
@@ -95,7 +94,7 @@ const exercises = [
   },
 ];
 
-function App() {
+export default function App() {
   // TODO:
   // Implement scoring and score card features
   // Implement a graph https://recharts.org/en-US/examples/SimpleLineChart
@@ -206,8 +205,4 @@ function App() {
   );
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("react-app");
-  const root = createRoot(container);
-  root.render(<App />);
-});
+// /api/rounds
