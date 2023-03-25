@@ -3,7 +3,7 @@
 # Table name: plans
 #
 #  id         :bigint           not null, primary key
-#  round_size :string
+#  round_size :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  student_id :bigint           not null
