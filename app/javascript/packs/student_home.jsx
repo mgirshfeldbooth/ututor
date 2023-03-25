@@ -10,12 +10,12 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-family: "Montserrat", sans-serif;
   min-width: 500px;
   border: 1px solid gray;
   padding: 20px;
   background-color: #f2f2f2;
+  height: 80vh;
 `;
 
 const Button = styled.button`
@@ -58,16 +58,8 @@ const CardTitle = styled.h2`
   font-weight: 800;
 `;
 
-const CardStats = styled.h4``;
-
 const Subtitle = styled.h3`
   font-size: 12px;
-`;
-
-const MathleticsTitle = styled.h3`
-  font-size: 12px;
-  text-transform: uppercase;
-  align-self: flex-start;
 `;
 
 const ValueInput = styled.input`
@@ -142,7 +134,7 @@ export default function App() {
   // Implement a graph https://recharts.org/en-US/examples/SimpleLineChart
   // Could use stacked bar chart with wrong/right answers for each difficulty https://recharts.org/en-US/examples/StackedBarChart
   // Make fetch requests to https://guides.rubyonrails.org/api_app.html
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [questionCount, setQuestionCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
   const [showExercises, setShowExercises] = useState(false);
   const [showScore, setShowScore] = useState(false);
@@ -203,23 +195,20 @@ export default function App() {
 
     // Set exercises to current exercise
     setCurrentExercise(exercise);
-
     setShowExercises(true);
+    setQuestionCount(questionCount + 1);
   }
 
   async function handleNextClick(event) {
     event.preventDefault();
     // This handles showing score when all questions have been answered
-    // if (currentQuestion === exercises.length - 1) {
-    //   // TODO: Figure out what to do here
-    //   setShowScore(true);
-    //   return;
-    // }
+    if (numberOfQuestions - questionCount === 0) {
+      // TODO: Figure out what to do here
+      setShowScore(true);
+      return;
+    }
 
-    // TODO: Keep track of score and other stats
-    const nextQuestion = currentQuestion + 1;
-    // setCurrentQuestion(nextQuestion);
-    console.log("submission is: ", submission);
+    setQuestionCount(questionCount + 1);
 
     /*
       Gather the submission
@@ -241,7 +230,9 @@ export default function App() {
 
     if (!response.ok) throw Error(response.statusText);
 
+    // TODO: This could be an exercise OR could be the end of the round
     const exercise = await response.json();
+
     debugger;
     // This contains the result of the previous submission
     // Check the submission
@@ -283,17 +274,17 @@ export default function App() {
   return (
     <CookiesProvider>
       <AppContainer>
-        <MathleticsTitle>Mathletics</MathleticsTitle>
         {showScore ? (
-          <StatsCard>
-            <CardTitle>Stats for this round</CardTitle>
-            <CardStats>{exercises.length} exercises</CardStats>
-            <CardStats>??? correct</CardStats>
-            <CardStats>??? incorrect</CardStats>
-            <CardStats>Accuracy: ???</CardStats>
-            <CardStats>Difficulty Reached: ???</CardStats>
-            <Button>Next lesson</Button>
-          </StatsCard>
+          // <StatsCard>
+          //   <CardTitle>Stats for this round</CardTitle>
+          //   <CardStats>{exercises.length} exercises</CardStats>
+          //   <CardStats>??? correct</CardStats>
+          //   <CardStats>??? incorrect</CardStats>
+          //   <CardStats>Accuracy: ???</CardStats>
+          //   <CardStats>Difficulty Reached: ???</CardStats>
+          //   <Button>Next lesson</Button>
+          // </StatsCard>
+          <h1>End of round</h1>
         ) : (
           <AnimatePresence mode={"wait"}>
             {showExercises ? (
