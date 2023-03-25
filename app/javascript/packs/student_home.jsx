@@ -129,6 +129,7 @@ function Freeplay({
   handleShowExercises,
   handleResetApp,
 }) {
+  console.log({ showExercises, roundEnded });
   return (
     <>
       {roundEnded ? (
@@ -234,19 +235,26 @@ export default function App() {
   const currentUserID = getUserIDFromMetaTag();
   const [cookies, setCookie] = useCookies();
   const roundID = cookies["current_round"];
-  const roundEnded = numberOfQuestions - questionCount === 0;
 
-  async function handleShowExercises(event) {
+  let roundEnded = false;
+
+  if (numberOfQuestions > 0) {
+    // Ensure that we are checking during a round
+    roundEnded = numberOfQuestions - questionCount === 0;
+  }
+
+  async function handleShowExercises() {
     /*
       - Get how many exercises they want in a round
       -- POST /api/rounds - Going to start a round
       --- RESPONSE 1 exercise
     */
-    event.preventDefault();
-
     const response = await fetch("/rounds", {
       method: "POST",
-      body: JSON.stringify({ query_round_length: numberOfQuestions }),
+      body: JSON.stringify({
+        query_round_length: numberOfQuestions,
+        query_plan_selected: planSelected,
+      }),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -313,6 +321,7 @@ export default function App() {
     setPlanSelected(planSelected);
 
     if (planSelected === "freeplay") {
+      // Show initial choose exercises screen
       return;
     } else if (planSelected === "practice") {
       const response = await fetch("/rounds", {
@@ -340,9 +349,11 @@ export default function App() {
 
   function handleResetApp() {
     changePlanSelected(null);
-    // setNumberOfQuestions(0);
-    // setQuestionCount(0);
+    setNumberOfQuestions(0);
+    setQuestionCount(0);
     setShowExercises(false);
+    setSubmission(null);
+    setCurrentExercise(null);
   }
 
   return (
