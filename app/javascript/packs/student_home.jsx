@@ -69,6 +69,7 @@ const ValueInput = styled.input`
   max-width: ${(props) => props.maxWidth}px;
 `;
 
+// Example of what our exercises object looks like
 // const exercises = [
 //   {
 //     id: 1,
@@ -76,18 +77,7 @@ const ValueInput = styled.input`
 //     answer: "2",
 //     difficulty: 1,
 //   },
-//   {
-//     id: 2,
-//     question: "3 - 2 = ?",
-//     answer: "1",
-//     difficulty: 1,
-//   },
-//   {
-//     id: 3,
-//     question: "4 * 2 = ?",
-//     answer: "8",
-//     difficulty: 1,
-//   },
+//   ...
 // ];
 
 function QuizCard({ question, clickHandler, handleAnswer }) {
@@ -128,54 +118,94 @@ function getUserIDFromMetaTag() {
   return document.querySelector(`meta[name='${name}']`).getAttribute("content");
 }
 
+function Freeplay({
+  roundEnded,
+  showExercises,
+  currentExercise,
+  handleNextClick,
+  handleAnswer,
+  handleChange,
+  numberOfQuestions,
+  handleShowExercises,
+}) {
+  return (
+    <>
+      {roundEnded ? (
+        <h1>End of round</h1>
+      ) : (
+        <AnimatePresence mode={"wait"}>
+          {showExercises ? (
+            <QuizCard
+              question={currentExercise}
+              clickHandler={handleNextClick}
+              handleAnswer={handleAnswer}
+            />
+          ) : (
+            <Card
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+                transition: { ease: "easeOut", duration: 0.3 },
+              }}
+              exit={{
+                opacity: 0,
+                transition: { ease: "easeIn", duration: 0.3 },
+              }}
+            >
+              <h2>How many exercises?</h2>
+              {/* TODO: Change the style below to be a property passed into ValueInput */}
+              <ValueInput
+                type="number"
+                placeholder="Enter amount of exercises..."
+                min="1"
+                step="1"
+                onChange={handleChange}
+                value={numberOfQuestions}
+                maxWidth={80}
+              />
+              <Button onClick={handleShowExercises}>Next</Button>
+            </Card>
+          )}
+        </AnimatePresence>
+      )}
+    </>
+  );
+}
+
+function PracticePlan() {
+  /*
+    Pull number of problems from plan table for student
+    1. Show student how many problems they are about to perform
+    2. Hit GO -> Same code as before
+  */
+  return <h1>Exercises go here</h1>;
+}
+
 export default function App() {
-  // TODO:
-  // Implement scoring and score card features
-  // Implement a graph https://recharts.org/en-US/examples/SimpleLineChart
-  // Could use stacked bar chart with wrong/right answers for each difficulty https://recharts.org/en-US/examples/StackedBarChart
-  // Make fetch requests to https://guides.rubyonrails.org/api_app.html
+  // setup state
   const [questionCount, setQuestionCount] = useState(0);
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
   const [showExercises, setShowExercises] = useState(false);
-  const [showScore, setShowScore] = useState(false);
   const [currentExercise, setCurrentExercise] = useState(null);
   const [submission, setSubmission] = useState(null);
+  const [planSelected, setPlanSelected] = useState(null);
+
+  // misc + derived values
   const currentUserID = getUserIDFromMetaTag();
   const [cookies, setCookie] = useCookies();
   const roundID = cookies["current_round"];
-
-  async function addRound(newRound) {
-    try {
-      const response = await window.fetch("/api/rounds", {
-        method: "POST",
-        body: JSON.stringify(newRound),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) throw Error(response.statusText);
-
-      const savedRound = await response.json();
-      // TODO: set exercises from our returned round
-      // const newExercises = [...exercises, savedRound];
-      // setExercises(newExercises);
-      // console.log("Round Added!");
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const roundEnded = numberOfQuestions - questionCount === 0;
 
   async function handleShowExercises(event) {
-    event.preventDefault();
-    // TODO: Make a request to backend
     /*
       - Get how many exercises they want in a round
       -- POST /api/rounds - Going to start a round
       --- RESPONSE 1 exercise
     */
+    event.preventDefault();
 
-    // Change query round length to match input value
     const response = await fetch("/rounds", {
       method: "POST",
       body: JSON.stringify({ query_round_length: numberOfQuestions }),
@@ -189,11 +219,9 @@ export default function App() {
 
     const exercise = await response.json();
 
-    // TODO: Response should contain the exercise. Modify rounds controller
-    // to namespace API
-    console.log(exercise);
+    // TODO: Modify rounds controller to namespace API
 
-    // Set exercises to current exercise
+    // Set next exercises to exercise in request response
     setCurrentExercise(exercise);
     setShowExercises(true);
     setQuestionCount(questionCount + 1);
@@ -202,9 +230,7 @@ export default function App() {
   async function handleNextClick(event) {
     event.preventDefault();
     // This handles showing score when all questions have been answered
-    if (numberOfQuestions - questionCount === 0) {
-      // TODO: Figure out what to do here
-      setShowScore(true);
+    if (roundEnded) {
       return;
     }
 
@@ -212,7 +238,7 @@ export default function App() {
 
     /*
       Gather the submission
-      // POST to /attempts
+      POST to /attempts
     */
     const response = await fetch("/attempts", {
       method: "POST",
@@ -233,15 +259,11 @@ export default function App() {
     // TODO: This could be an exercise OR could be the end of the round
     const exercise = await response.json();
 
-    debugger;
-    // This contains the result of the previous submission
-    // Check the submission
-    // FIX: Why does the submission get returned on the last submission
+    // This returns something different when all the exercises have been completed
     setCurrentExercise(exercise);
   }
 
   function handleChange(event) {
-    // TODO: Hook up numberOfQuestions to render that many questions
     setNumberOfQuestions(event.target.valueAsNumber);
   }
 
@@ -249,9 +271,8 @@ export default function App() {
     setSubmission(event.target.value);
   }
 
+  // TODO: Clean this up
   useEffect(() => {
-    // TODO: Fetch exercises from API, either on page load or when # of exercises is POST
-    // console.log(exercises);
     /*
       - Get how many exercises they want in a round
       -- POST /api/rounds - Going to start a round
@@ -274,55 +295,42 @@ export default function App() {
   return (
     <CookiesProvider>
       <AppContainer>
-        {showScore ? (
-          // <StatsCard>
-          //   <CardTitle>Stats for this round</CardTitle>
-          //   <CardStats>{exercises.length} exercises</CardStats>
-          //   <CardStats>??? correct</CardStats>
-          //   <CardStats>??? incorrect</CardStats>
-          //   <CardStats>Accuracy: ???</CardStats>
-          //   <CardStats>Difficulty Reached: ???</CardStats>
-          //   <Button>Next lesson</Button>
-          // </StatsCard>
-          <h1>End of round</h1>
-        ) : (
-          <AnimatePresence mode={"wait"}>
-            {showExercises ? (
-              <QuizCard
-                question={currentExercise}
-                clickHandler={handleNextClick}
-                handleAnswer={handleAnswer}
-              />
-            ) : (
-              <Card
-                initial={{
-                  opacity: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                  transition: { ease: "easeOut", duration: 0.3 },
-                }}
-                exit={{
-                  opacity: 0,
-                  transition: { ease: "easeIn", duration: 0.3 },
-                }}
-              >
-                <h2>How many exercises?</h2>
-                {/* TODO: Change the style below to be a property passed into ValueInput */}
-                <ValueInput
-                  type="number"
-                  placeholder="Enter amount of exercises..."
-                  min="1"
-                  step="1"
-                  onChange={handleChange}
-                  value={numberOfQuestions}
-                  maxWidth={80}
-                />
-                <Button onClick={handleShowExercises}>Next</Button>
-              </Card>
-            )}
-          </AnimatePresence>
+        {!planSelected && (
+          <>
+            <Button
+              onClick={() => {
+                setPlanSelected("freeplay");
+              }}
+            >
+              Free Play
+            </Button>
+
+            <br></br>
+
+            <Button
+              onClick={() => {
+                setPlanSelected("practice");
+              }}
+            >
+              Practice Plan
+            </Button>
+          </>
         )}
+
+        {planSelected === "freeplay" && (
+          <Freeplay
+            roundEnded={roundEnded}
+            showExercises={showExercises}
+            currentExercise={currentExercise}
+            handleNextClick={handleNextClick}
+            handleAnswer={handleAnswer}
+            handleChange={handleChange}
+            numberOfQuestions={numberOfQuestions}
+            handleShowExercises={handleShowExercises}
+          ></Freeplay>
+        )}
+
+        {planSelected === "practice" && <PracticePlan></PracticePlan>}
       </AppContainer>
     </CookiesProvider>
   );
