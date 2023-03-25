@@ -127,11 +127,15 @@ function Freeplay({
   handleChange,
   numberOfQuestions,
   handleShowExercises,
+  handleResetApp,
 }) {
   return (
     <>
       {roundEnded ? (
-        <h1>End of round</h1>
+        <>
+          <h1>End of round</h1>
+          <Button onClick={handleResetApp}>Reset</Button>
+        </>
       ) : (
         <AnimatePresence mode={"wait"}>
           {showExercises ? (
@@ -155,7 +159,6 @@ function Freeplay({
               }}
             >
               <h2>How many exercises?</h2>
-              {/* TODO: Change the style below to be a property passed into ValueInput */}
               <ValueInput
                 type="number"
                 placeholder="Enter amount of exercises..."
@@ -174,13 +177,48 @@ function Freeplay({
   );
 }
 
-function PracticePlan() {
+function PracticePlan({
+  roundEnded,
+  showExercises,
+  numberOfQuestions,
+  handleStartPractice,
+  currentExercise,
+  handleNextClick,
+  handleAnswer,
+  handleResetApp,
+}) {
   /*
     Pull number of problems from plan table for student
     1. Show student how many problems they are about to perform
     2. Hit GO -> Same code as before
   */
-  return <h1>Exercises go here</h1>;
+
+  return (
+    <>
+      {roundEnded ? (
+        <>
+          <h1>End of round</h1>
+          <Button onClick={handleResetApp}>Reset</Button>
+        </>
+      ) : (
+        <AnimatePresence mode={"wait"}>
+          {showExercises ? (
+            <QuizCard
+              question={currentExercise}
+              clickHandler={handleNextClick}
+              handleAnswer={handleAnswer}
+            />
+          ) : (
+            <>
+              <h1>Are you ready to start?</h1>
+              <h2>You will do {numberOfQuestions} exercise(s)</h2>
+              <Button onClick={handleStartPractice}>Go!</Button>
+            </>
+          )}
+        </AnimatePresence>
+      )}
+    </>
+  );
 }
 
 export default function App() {
@@ -271,26 +309,41 @@ export default function App() {
     setSubmission(event.target.value);
   }
 
-  // TODO: Clean this up
-  useEffect(() => {
-    /*
-      - Get how many exercises they want in a round
-      -- POST /api/rounds - Going to start a round
-      --- RESPONSE 1 exercise
+  async function changePlanSelected(planSelected) {
+    setPlanSelected(planSelected);
 
-      +++ Show Exercise +++
-      
-      - Get the answer
-      -- POST /api/attempts - Record the attempt
-      --- RESPONSE 1 exercise
-      
-      ...
+    if (planSelected === "freeplay") {
+      return;
+    } else if (planSelected === "practice") {
+      const response = await fetch("/rounds", {
+        method: "POST",
+        body: JSON.stringify({ query_plan_selected: planSelected }),
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
-      +++ Reach end of round +++ 
-      +++ Show the score (OPTIONAL) +++
-    */
-    // fetch("/api/exercises");
-  }, []);
+      if (!response.ok) throw Error(response.statusText);
+
+      const exercise = await response.json();
+      // Set the next exercise, and set number of questions, use response value round_length for round length
+      setCurrentExercise(exercise);
+      setNumberOfQuestions(exercise.round_length);
+    }
+  }
+
+  function handleStartPractice() {
+    setShowExercises(true);
+  }
+
+  function handleResetApp() {
+    changePlanSelected(null);
+    // setNumberOfQuestions(0);
+    // setQuestionCount(0);
+    setShowExercises(false);
+  }
 
   return (
     <CookiesProvider>
@@ -299,7 +352,7 @@ export default function App() {
           <>
             <Button
               onClick={() => {
-                setPlanSelected("freeplay");
+                changePlanSelected("freeplay");
               }}
             >
               Free Play
@@ -309,7 +362,7 @@ export default function App() {
 
             <Button
               onClick={() => {
-                setPlanSelected("practice");
+                changePlanSelected("practice");
               }}
             >
               Practice Plan
@@ -327,10 +380,22 @@ export default function App() {
             handleChange={handleChange}
             numberOfQuestions={numberOfQuestions}
             handleShowExercises={handleShowExercises}
+            handleResetApp={handleResetApp}
           ></Freeplay>
         )}
 
-        {planSelected === "practice" && <PracticePlan></PracticePlan>}
+        {planSelected === "practice" && (
+          <PracticePlan
+            numberOfQuestions={numberOfQuestions}
+            handleStartPractice={handleStartPractice}
+            roundEnded={roundEnded}
+            currentExercise={currentExercise}
+            handleNextClick={handleNextClick}
+            handleAnswer={handleAnswer}
+            showExercises={showExercises}
+            handleResetApp={handleResetApp}
+          ></PracticePlan>
+        )}
       </AppContainer>
     </CookiesProvider>
   );

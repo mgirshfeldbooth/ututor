@@ -10,7 +10,7 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-    <meta name="user_id" content="<%= current_user.id %>" />
+    <meta name="user_id" content="<%= signed_in? && current_user.id %>" />
   </head>
 
   
