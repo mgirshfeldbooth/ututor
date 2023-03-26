@@ -270,7 +270,7 @@ export default function App() {
     // Set next exercises to exercise in request response
     setCurrentExercise(exercise);
     setShowExercises(true);
-    setQuestionCount(questionCount + 1);
+    // setQuestionCount(questionCount + 1);
   }
 
   async function handleNextClick(event) {

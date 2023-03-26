@@ -43,8 +43,16 @@ class RoundsController < ApplicationController
 
     respond_to do |format|
       if @round.save
-        format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
-        exercise = Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first
+        if plan_selected == "freeplay"
+          # FREE PLAY PLAN
+          format.html { redirect_to exercise_path(Exercise.where( difficulty: 0 ).shuffle.first.id), notice: "Round was successfully created." }
+          exercise = Exercise.where( difficulty: 0 ).shuffle.first
+        elsif plan_selected == "practice"
+          # TUTOR PRACTICE PLAN
+          format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
+          exercise = Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first
+        end
+        
         # Append round length to exercise
         edited_exercise = exercise.as_json.merge(round_length: round_length)
         format.json { render json: edited_exercise }
