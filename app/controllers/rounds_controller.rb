@@ -43,7 +43,7 @@ class RoundsController < ApplicationController
     @assigned_subject_id = plan.subject_id if plan
 
     unless plan
-      format.html { redirect_to new_plan_path, alert: "Please create a plan first." }
+      format.html { redirect_to new_plan_path, flash: { alert: "Please create a plan first." } }
       format.json { render json: { error: "Please create a plan first." }, status: :unprocessable_entity }
       return
     end
