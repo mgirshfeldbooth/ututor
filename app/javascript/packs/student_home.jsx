@@ -10,28 +10,27 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Karla", sans-serif;
   min-width: 500px;
   border: 1px solid gray;
   padding: 20px;
-  background-color: #f2f2f2;
+  background-color: #f2f5f9;
   height: 80vh;
 `;
 
 const Button = styled.button`
-  background-color: #6cd97d;
-  color: #202425;
+  background-color: #5fcfbc;
+  color: white;
   text-transform: uppercase;
   font-weight: 700;
   border: 0;
-  border-radius: 2px;
+  border-radius: 16px;
   align-self: center;
   padding: 10px 20px;
   transition: all 0.2s;
   &:hover {
-    cursor: pointer;
-    background-image: linear-gradient(rgb(0 0 0/20%) 0 0);
-    transform: translateY(-1px);
+    transform: scale(1.05);
+    transition: 150ms;
   }
 `;
 
@@ -39,14 +38,16 @@ const Card = styled(motion.div)`
   text-align: center;
   margin: 20px auto;
   padding: 20px;
+  color: #142e47;
+  background-color: #fbfcfd;
   display: flex;
   flex-direction: column;
   row-gap: 15px;
   align-items: center;
   min-width: 300px;
   /* Card effects */
-  box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);
-  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  border-radius: 24px;
   border: 2px solid #ddd;
 `;
 
@@ -55,18 +56,22 @@ const StatsCard = styled(Card)`
 `;
 
 const CardTitle = styled.h2`
-  font-weight: 800;
+  font-weight: 600;
 `;
 
 const Subtitle = styled.h3`
-  font-size: 12px;
+  font-size: 16px;
+  width: 75%;
 `;
 
 const ValueInput = styled.input`
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 16px;
+  text-align: center;
   border: 1px solid #ddd;
   max-width: ${(props) => props.maxWidth}px;
+  gap: 28px;
+  margin-top: 48px;
 `;
 
 // Example of what our exercises object looks like
@@ -133,10 +138,11 @@ function Freeplay({
   return (
     <>
       {roundEnded ? (
-        <>
-          <h1>End of round</h1>
+        <Card>
+          <CardTitle>Thanks!</CardTitle>
+          <Subtitle>Round Complete</Subtitle>
           <Button onClick={handleResetApp}>Reset</Button>
-        </>
+        </Card>
       ) : (
         <AnimatePresence mode={"wait"}>
           {showExercises ? (
@@ -159,7 +165,7 @@ function Freeplay({
                 transition: { ease: "easeIn", duration: 0.3 },
               }}
             >
-              <h2>How many exercises?</h2>
+              <h2>How many exercises would you like to try?</h2>
               <ValueInput
                 type="number"
                 placeholder="Enter amount of exercises..."
@@ -197,10 +203,11 @@ function PracticePlan({
   return (
     <>
       {roundEnded ? (
-        <>
-          <h1>End of round</h1>
+        <Card>
+          <CardTitle>Thanks!</CardTitle>
+          <Subtitle>Round Complete</Subtitle>
           <Button onClick={handleResetApp}>Reset</Button>
-        </>
+        </Card>
       ) : (
         <AnimatePresence mode={"wait"}>
           {showExercises ? (
@@ -210,11 +217,11 @@ function PracticePlan({
               handleAnswer={handleAnswer}
             />
           ) : (
-            <>
-              <h1>Are you ready to start?</h1>
-              <h2>You will do {numberOfQuestions} exercise(s)</h2>
+            <Card>
+              <CardTitle>Ready to play?</CardTitle>
+              <Subtitle>You will do {numberOfQuestions} exercise(s)</Subtitle>
               <Button onClick={handleStartPractice}>Go!</Button>
-            </>
+            </Card>
           )}
         </AnimatePresence>
       )}
@@ -359,54 +366,63 @@ export default function App() {
   return (
     <CookiesProvider>
       <AppContainer>
-        {!planSelected && (
-          <>
-            <Button
-              onClick={() => {
-                changePlanSelected("freeplay");
-              }}
-            >
-              Free Play
-            </Button>
 
-            <br></br>
+      
 
-            <Button
-              onClick={() => {
-                changePlanSelected("practice");
-              }}
-            >
-              Practice Plan
-            </Button>
-          </>
-        )}
+          {!planSelected && (
+            <Card>
+              <CardTitle>Welcome!</CardTitle>
+              <Subtitle>Would you like to practice your tutor's plan or free play?</Subtitle>
+              <Button
+                onClick={() => {
+                  changePlanSelected("practice");
+                }}
+              >
+                Practice Plan
+              </Button>
 
-        {planSelected === "freeplay" && (
-          <Freeplay
-            roundEnded={roundEnded}
-            showExercises={showExercises}
-            currentExercise={currentExercise}
-            handleNextClick={handleNextClick}
-            handleAnswer={handleAnswer}
-            handleChange={handleChange}
-            numberOfQuestions={numberOfQuestions}
-            handleShowExercises={handleShowExercises}
-            handleResetApp={handleResetApp}
-          ></Freeplay>
-        )}
+              <Button
+                onClick={() => {
+                  changePlanSelected("freeplay");
+                }}
+              >
+                Free Play
+              </Button>
 
-        {planSelected === "practice" && (
-          <PracticePlan
-            numberOfQuestions={numberOfQuestions}
-            handleStartPractice={handleStartPractice}
-            roundEnded={roundEnded}
-            currentExercise={currentExercise}
-            handleNextClick={handleNextClick}
-            handleAnswer={handleAnswer}
-            showExercises={showExercises}
-            handleResetApp={handleResetApp}
-          ></PracticePlan>
-        )}
+
+              
+            </Card>
+          )}
+
+          {planSelected === "freeplay" && (
+            <Freeplay
+              roundEnded={roundEnded}
+              showExercises={showExercises}
+              currentExercise={currentExercise}
+              handleNextClick={handleNextClick}
+              handleAnswer={handleAnswer}
+              handleChange={handleChange}
+              numberOfQuestions={numberOfQuestions}
+              handleShowExercises={handleShowExercises}
+              handleResetApp={handleResetApp}
+            ></Freeplay>
+          )}
+
+          {planSelected === "practice" && (
+            <PracticePlan
+              numberOfQuestions={numberOfQuestions}
+              handleStartPractice={handleStartPractice}
+              roundEnded={roundEnded}
+              currentExercise={currentExercise}
+              handleNextClick={handleNextClick}
+              handleAnswer={handleAnswer}
+              showExercises={showExercises}
+              handleResetApp={handleResetApp}
+            ></PracticePlan>
+          )}
+   
+      
+        
       </AppContainer>
     </CookiesProvider>
   );

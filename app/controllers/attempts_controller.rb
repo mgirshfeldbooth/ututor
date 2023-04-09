@@ -24,7 +24,7 @@ class AttemptsController < ApplicationController
   def create
     @attempt = Attempt.new
 
-    @attempt.started_at = params[:starting_timestamp]
+    @attempt.started_at = cookies.fetch(:attempt_started_at)
     @attempt.finished_at = DateTime.now.change(:offset => "+500")
     @attempt.submission = params.fetch("query_submission")
 
@@ -37,6 +37,11 @@ class AttemptsController < ApplicationController
     attempts_left -= 1
     cookies[:attempts_left] = attempts_left
     @assigned_subject_id = Plan.find_by(student_id: current_user.id).subject_id
+
+    # Adjusting user level here so that exercises are served at the right difficulty
+    current_user_level = cookies.fetch(:user_level).to_i
+    current_streak = cookies.fetch(:streak_counter).to_i
+
     respond_to do |format|
       if @attempt.save
         if (attempts_left != 0)
@@ -54,9 +59,7 @@ class AttemptsController < ApplicationController
       end
     end
 
-    # Adjusting user level here so that exercises are served at the right difficulty
-    current_user_level = cookies.fetch(:user_level).to_i
-    current_streak = cookies.fetch(:streak_counter).to_i
+
 
     if @attempt.correct 
       if (current_user_level != Exercise.maximum(:difficulty)) and (current_streak == 2)
