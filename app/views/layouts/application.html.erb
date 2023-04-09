@@ -13,22 +13,22 @@
     <meta name="user_id" content="<%= signed_in? && current_user.id %>" />
   </head>
 
-  <body>
+  
+    <body>
     <%= render "shared/navbar" %>
 
-    <% if Rails.env.development? %>
-      <div class="container">
-
+    <div class="container">
+      <% if Rails.env.development? %>
         <% if notice.present? %>
           <%= render "shared/flash", message: notice, css_class: "success" %>
         <% end %>
         <% if alert.present? %>
           <%= render "shared/flash", message: alert, css_class: "danger" %>
         <% end %>
-        <%= yield %>
-      </div>
-    <% end %>
-
-  </body>
+      <% end %>
+      
+      <%= yield %>
+    </div>
+    </body>
 
 </html>
