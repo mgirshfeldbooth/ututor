@@ -70,6 +70,11 @@
    isolation: isolate;
  }
  
- .navbar {
-    background-color: pink;
- }
+ .custom-navbar-bg {
+  background-color: #0093fb; /* Replace with your desired color in hexadecimal, rgb, or named color format */
+}
+
+.navbar-custom-color {
+  color: white !important; /* Make sure to use !important to override any existing styles */
+}
+

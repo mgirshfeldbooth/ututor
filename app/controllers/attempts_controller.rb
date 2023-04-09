@@ -42,6 +42,24 @@ class AttemptsController < ApplicationController
     current_user_level = cookies.fetch(:user_level).to_i
     current_streak = cookies.fetch(:streak_counter).to_i
 
+    if @attempt.correct 
+      if (current_user_level != Exercise.maximum(:difficulty)) and (current_streak == 2)
+        current_user_level += 1
+        cookies[:user_level] = current_user_level
+      else
+        current_streak += 1
+        cookies[:streak_counter] = current_streak
+      end
+    else
+      if current_user_level != Exercise.minimum(:difficulty)
+        current_user_level = current_user_level - 1
+        cookies[:streak_counter] = 0
+        cookies[:user_level] = current_user_level
+      end
+    end
+
+    cookies[:attempt_started_at] = DateTime.now.change(:offset => "+500")
+    
     respond_to do |format|
       if @attempt.save
         if (attempts_left != 0)
@@ -61,23 +79,7 @@ class AttemptsController < ApplicationController
 
 
 
-    if @attempt.correct 
-      if (current_user_level != Exercise.maximum(:difficulty)) and (current_streak == 2)
-        current_user_level += 1
-        cookies[:user_level] = current_user_level
-      else
-        current_streak += 1
-        cookies[:streak_counter] = current_streak
-      end
-    else
-      if current_user_level != Exercise.minimum(:difficulty)
-        current_user_level = current_user_level - 1
-        cookies[:streak_counter] = 0
-        cookies[:user_level] = current_user_level
-      end
-    end
-
-    cookies[:attempt_started_at] = DateTime.now.change(:offset => "+500")
+    
   end
 
   # PATCH/PUT /attempts/1 or /attempts/1.json

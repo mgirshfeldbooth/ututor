@@ -1,6 +1,6 @@
 // import "./styles.css";
 import styled from "@emotion/styled";
-import React, { useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion/dist/framer-motion";
 import { CookiesProvider, useCookies } from "react-cookie";
@@ -74,6 +74,9 @@ const ValueInput = styled.input`
   margin-top: 48px;
 `;
 
+
+
+
 // Example of what our exercises object looks like
 // const exercises = [
 //   {
@@ -112,6 +115,7 @@ function QuizCard({ question, clickHandler, handleAnswer }) {
         placeholder="Enter answer..."
         maxWidth={160}
         onChange={handleAnswer}
+        autoFocus
       />
       <Button onClick={clickHandler}>Next</Button>
     </Card>
@@ -174,6 +178,7 @@ function Freeplay({
                 onChange={handleChange}
                 value={numberOfQuestions}
                 maxWidth={80}
+                autoFocus
               />
               <Button onClick={handleShowExercises}>Next</Button>
             </Card>
