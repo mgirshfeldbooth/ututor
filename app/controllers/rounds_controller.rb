@@ -29,7 +29,7 @@ class RoundsController < ApplicationController
     else
       if plan_selected == "freeplay"
           # FREE PLAY PLAN
-        round_length = params.fetch("query_round_length")
+        round_length = params.fetch("query_round_length", 10)
       elsif plan_selected == "practice"
         # TUTOR PRACTICE PLAN
         round_length = Plan.find_by(student_id: current_user.id).round_size
