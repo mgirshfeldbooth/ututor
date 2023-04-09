@@ -39,7 +39,14 @@ class RoundsController < ApplicationController
     @round = Round.new(student_id: current_user.id)
     cookies[:attempts_left] = round_length
     # FIX: Requires a plan to be set by the tutor, else could return NIL. No plans yet, go make a plan or serve everything
-    @assigned_subject_id = Plan.find_by(student_id: current_user.id).subject_id
+    plan = Plan.find_by(student_id: current_user.id)
+    @assigned_subject_id = plan.subject_id if plan
+
+    unless plan
+      format.html { redirect_to new_plan_path, alert: "Please create a plan first." }
+      format.json { render json: { error: "Please create a plan first." }, status: :unprocessable_entity }
+      return
+    end
 
     respond_to do |format|
       if @round.save
