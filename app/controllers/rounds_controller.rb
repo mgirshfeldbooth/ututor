@@ -22,7 +22,8 @@ class RoundsController < ApplicationController
 
   # POST /rounds or /rounds.json
   def create
-    plan_selected = params.fetch("query_plan_selected")
+    plan_selected = params.fetch("query_plan_selected") # this 'plan_selected' means 'free play' or 'practice plan'
+    plan = Plan.find_by(student_id: current_user.id) # this finds the assigned subject plan
 
     if !params.has_key?("query_plan_selected")
       round_length = 10
@@ -32,21 +33,21 @@ class RoundsController < ApplicationController
         round_length = params.fetch("query_round_length", 10)
       elsif plan_selected == "practice"
         # TUTOR PRACTICE PLAN
-        round_length = Plan.find_by(student_id: current_user.id).round_size
+        if plan
+          round_length = Plan.find_by(student_id: current_user.id).round_size
+        else
+          round_length = 10
+        end
+        
       end
     end
 
     @round = Round.new(student_id: current_user.id)
     cookies[:attempts_left] = round_length
     # FIX: Requires a plan to be set by the tutor, else could return NIL. No plans yet, go make a plan or serve everything
-    plan = Plan.find_by(student_id: current_user.id)
+
     @assigned_subject_id = plan.subject_id if plan
 
-    unless plan
-      format.html { redirect_to new_plan_path, flash: { alert: "Please create a plan first." } }
-      format.json { render json: { error: "Please create a plan first." }, status: :unprocessable_entity }
-      return
-    end
 
     respond_to do |format|
       if @round.save
@@ -56,8 +57,14 @@ class RoundsController < ApplicationController
           exercise = Exercise.where( difficulty: 0 ).shuffle.first
         elsif plan_selected == "practice"
           # TUTOR PRACTICE PLAN
-          format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
-          exercise = Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first
+          if plan
+            format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
+            exercise = Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first
+          else
+            format.html { redirect_to exercise_path(Exercise.where( difficulty: 0).shuffle.first.id), notice: "Round was successfully created." }
+            exercise = Exercise.where( difficulty: 0).shuffle.first
+          end
+
         end
         
         # Append round length to exercise

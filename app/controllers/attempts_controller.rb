@@ -36,7 +36,9 @@ class AttemptsController < ApplicationController
     attempts_left = cookies.fetch(:attempts_left).to_i
     attempts_left -= 1
     cookies[:attempts_left] = attempts_left
-    @assigned_subject_id = Plan.find_by(student_id: current_user.id).subject_id
+    
+    plan = Plan.find_by(student_id: current_user.id)
+    @assigned_subject_id = plan.subject_id if plan
 
     # Adjusting user level here so that exercises are served at the right difficulty
     current_user_level = cookies.fetch(:user_level).to_i
@@ -59,12 +61,17 @@ class AttemptsController < ApplicationController
     end
 
     cookies[:attempt_started_at] = DateTime.now.change(:offset => "+500")
-    
+
     respond_to do |format|
       if @attempt.save
         if (attempts_left != 0)
-          format.html { redirect_to exercise_path(Exercise.where( :difficulty => cookies.fetch(:user_level), subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Attempt recorded!" }
-          exercise = Exercise.where( :difficulty => cookies.fetch(:user_level), subject_id: @assigned_subject_id ).shuffle.first
+          if plan
+            format.html { redirect_to exercise_path(Exercise.where( :difficulty => cookies.fetch(:user_level), subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Attempt recorded!" }
+            exercise = Exercise.where( :difficulty => cookies.fetch(:user_level), subject_id: @assigned_subject_id ).shuffle.first
+          else
+            format.html { redirect_to exercise_path(Exercise.where( :difficulty => cookies.fetch(:user_level)).shuffle.first.id), notice: "Attempt recorded!" }
+            exercise = Exercise.where( :difficulty => cookies.fetch(:user_level)).shuffle.first
+          end
 
           format.json {render json: exercise}
         elsif (attempts_left == 0)
