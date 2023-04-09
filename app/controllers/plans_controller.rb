@@ -24,7 +24,11 @@ class PlansController < ApplicationController
   def create
     @plan = Plan.new
     @plan.tutor_id = current_user.id
-    @plan.student_id = params.fetch("query_student_id")
+
+    # find the student by email
+    student = User.find_by(email: params.fetch("query_student_email"))
+    @plan.student_id = student.id if student
+
     @plan.subject_id = params.fetch("query_subject_id")
     @plan.round_size = params.fetch("query_round_size")
 

@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   protect_from_forgery with: :null_session
   # The reason this is necessary is that Rails has a built in mechanism to protect against cross site request forgery (CSRF) attacks.
   # By default this sees Rails generate a unique token and validate its authenticity with each POST PUT PATCH DELETE request. 
@@ -12,4 +14,9 @@ class ApplicationController < ActionController::Base
     render({ :template => "home/home"})
   end
 
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:role])
+  end
 end
