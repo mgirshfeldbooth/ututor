@@ -11,7 +11,6 @@ const AppContainer = styled.div`
   flex-direction: column;
   align-items: center;
   font-family: "Karla", sans-serif;
-  min-width: 500px;
   border: 1px solid gray;
   padding: 20px;
   background-color: #f2f5f9;
