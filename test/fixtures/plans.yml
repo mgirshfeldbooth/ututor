@@ -2,13 +2,14 @@
 #
 # Table name: plans
 #
-#  id         :bigint           not null, primary key
-#  round_size :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  student_id :bigint           not null
-#  subject_id :bigint           not null
-#  tutor_id   :bigint           not null
+#  id            :bigint           not null, primary key
+#  round_size    :integer
+#  student_email :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  student_id    :bigint
+#  subject_id    :bigint           not null
+#  tutor_id      :bigint           not null
 #
 # Indexes
 #

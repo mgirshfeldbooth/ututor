@@ -23,7 +23,7 @@ class RoundsController < ApplicationController
   # POST /rounds or /rounds.json
   def create
     plan_selected = params.fetch("query_plan_selected") # this 'plan_selected' means 'free play' or 'practice plan'
-    plan = Plan.find_by(student_id: current_user.id) # this finds the assigned subject plan
+    plan = Plan.find_by(student_email: current_user.email) # this finds the assigned subject plan
 
     if !params.has_key?("query_plan_selected")
       round_length = 10
@@ -34,7 +34,7 @@ class RoundsController < ApplicationController
       elsif plan_selected == "practice"
         # TUTOR PRACTICE PLAN
         if plan
-          round_length = Plan.find_by(student_id: current_user.id).round_size
+          round_length = Plan.find_by(student_email: current_user.email).round_size
         else
           round_length = 10
         end
@@ -58,13 +58,12 @@ class RoundsController < ApplicationController
         elsif plan_selected == "practice"
           # TUTOR PRACTICE PLAN
           if plan
-            format.html { redirect_to exercise_path(Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first.id), notice: "Round was successfully created." }
-            exercise = Exercise.where( difficulty: 0, subject_id: @assigned_subject_id ).shuffle.first
+            exercise = Exercise.joins(:subject).where(difficulty: 0, subjects: { id: @assigned_subject_id }).shuffle.first
+            format.html { redirect_to exercise_path(exercise.id), notice: "Round was successfully created." }
           else
-            format.html { redirect_to exercise_path(Exercise.where( difficulty: 0).shuffle.first.id), notice: "Round was successfully created." }
-            exercise = Exercise.where( difficulty: 0).shuffle.first
+            exercise = Exercise.where(difficulty: 0).shuffle.first
+            format.html { redirect_to exercise_path(exercise.id), notice: "Round was successfully created." }
           end
-
         end
         
         # Append round length to exercise

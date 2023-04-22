@@ -8,7 +8,7 @@
       <th>Tutor</th>
       <th>Student Email</th>
       <th>Subject</th>
-      <th>Round size</th>
+      <th>Questions Per Round</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -17,7 +17,7 @@
     <% @plans.each do |plan| %>
       <tr>
         <td><%= plan.tutor.email %></td>
-        <td><%= plan.student.email %></td>
+        <td><%= plan.student_email %></td>
         <td><%= plan.subject.name %></td>
         <td><%= plan.round_size %></td>
         <td><%= link_to 'Edit', edit_plan_path(plan) %></td>
@@ -47,7 +47,7 @@
           </div>
 
           <div class="form-group mb-3">
-            <%= label_tag :query_round_size, "Round Size:" %>
+            <%= label_tag :query_round_size, "Round Size (Questions Per Round):" %>
             <%= text_field_tag :query_round_size, nil, class: "form-control" %>
           </div>
           

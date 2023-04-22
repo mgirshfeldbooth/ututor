@@ -27,17 +27,23 @@ class PlansController < ApplicationController
 
     # find the student by email
     student = User.find_by(email: params.fetch("query_student_email"))
-    @plan.student_id = student.id if student
+    @plan.student_id = student&.id
+    @plan.student_email = params.fetch("query_student_email")
 
     @plan.subject_id = params.fetch("query_subject_id")
     @plan.round_size = params.fetch("query_round_size")
 
     respond_to do |format|
       if @plan.save
-        format.html { redirect_to root_path, notice: "Plan was successfully created." }
+        flash[:notice] = "Plan was successfully created."
+        @plans = Plan.where(tutor_id: current_user.id)
+        format.html { render "home/home" }
         format.json { render :show, status: :created, location: @plan }
       else
-        format.html { redirect_to root_path, status: :unprocessable_entity }
+        @plans = Plan.where(tutor_id: current_user.id)
+        flash.now[:alert] = "Plan could not be created."
+        flash.now[:error_messages] = @plan.errors.full_messages
+        format.html { render 'home/home', status: :unprocessable_entity } # Replace 'controller_name' with the actual controller name.
         format.json { render json: @plan.errors, status: :unprocessable_entity }
       end
     end

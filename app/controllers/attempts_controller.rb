@@ -37,7 +37,7 @@ class AttemptsController < ApplicationController
     attempts_left -= 1
     cookies[:attempts_left] = attempts_left
     
-    plan = Plan.find_by(student_id: current_user.id)
+    plan = Plan.find_by(student_email: current_user.email)
     @assigned_subject_id = plan.subject_id if plan
 
     # Adjusting user level here so that exercises are served at the right difficulty

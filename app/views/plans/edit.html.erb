@@ -1,6 +1,17 @@
-<h1>Editing Plan</h1>
-
-<%= render 'form', plan: @plan %>
-
-<%= link_to 'Show', @plan %> |
-<%= link_to 'Back', plans_path %>
+<div class="row justify-content-center align-items-center">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header text-white">
+        <h3 class="card-title text-center">Editing Plan</h3>
+      </div>
+      <div class="card-body form-group mb-3">
+        <%= render 'form', plan: @plan %>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-between">
+          <%= link_to 'Back', root_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

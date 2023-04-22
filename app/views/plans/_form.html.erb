@@ -1,37 +1,32 @@
-<%= form_with(model: plan) do |form| %>
+<%= form_with(model: plan, local: true) do |form| %>
   <% if plan.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(plan.errors.count, "error") %> prohibited this plan from being saved:</h2>
-
       <ul>
-        <% plan.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% plan.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :tutor_id %>
-    <%= form.text_field :tutor_id, :value => current_user.id %>
+  <div class="form-group mb-3">
+    <%= form.label :student_email, "Your Student's Email:" %>
+    <%= form.email_field :student_email, value: plan.student_email, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :student_id %>
-    <%= form.text_field :student_id %>
+  <div class="form-group mb-3">
+    <%= form.label :subject_id, "Subject:" %>
+    <%= form.select :subject_id, options_for_select(Subject.all.map{ |s| [s.name, s.id] }, plan.subject_id), {}, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :subject_id %>
-    <%= form.text_field :subject_id %>
+  <div class="form-group mb-3">
+    <%= form.label :round_size, "Round Size (Questions Per Round):" %>
+    <%= form.text_field :round_size, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :round_size %>
-    <%= form.text_field :round_size %>
+  <div class="form-group text-center">
+    <%= form.submit "Submit", class: "btn btn-primary" %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
 <% end %>
