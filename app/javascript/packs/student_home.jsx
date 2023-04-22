@@ -4,6 +4,8 @@ import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion/dist/framer-motion";
 import { CookiesProvider, useCookies } from "react-cookie";
+import useWindowSize from 'react-use/lib/useWindowSize';
+import Confetti from 'react-confetti';
 
 const AppContainer = styled.div`
   color: #202425;
@@ -88,6 +90,12 @@ const ValueInput = styled.input`
 // ];
 
 function QuizCard({ question, clickHandler, handleAnswer }) {
+  function handleKeyDown (event) {
+    if (event.key === 'Enter') {
+      clickHandler(event);
+    }
+  };
+
   return (
     <Card
       key={question.id}
@@ -114,6 +122,7 @@ function QuizCard({ question, clickHandler, handleAnswer }) {
         placeholder="Enter answer..."
         maxWidth={160}
         onChange={handleAnswer}
+        onKeyDown={handleKeyDown}
         autoFocus
       />
       <Button onClick={clickHandler}>Next</Button>
@@ -241,11 +250,14 @@ export default function App() {
   const [currentExercise, setCurrentExercise] = useState(null);
   const [submission, setSubmission] = useState(null);
   const [planSelected, setPlanSelected] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // misc + derived values
   const currentUserID = getUserIDFromMetaTag();
   const [cookies, setCookie] = useCookies();
   const roundID = cookies["current_round"];
+  const { width, height } = useWindowSize()
+
 
   let roundEnded = false;
 
@@ -313,6 +325,12 @@ export default function App() {
 
     if (!response.ok) throw Error(response.statusText);
 
+    if (currentExercise.answer == submission) {
+      setShowConfetti(true)
+      setTimeout(() => {
+        setShowConfetti(false)
+      }, 3000);
+    }
     // TODO: This could be an exercise OR could be the end of the round
     const exercise = await response.json();
 
@@ -426,7 +444,10 @@ export default function App() {
           )}
    
       
-        
+          {showConfetti && <Confetti
+            width={width}
+            height={height}
+          />}
       </AppContainer>
     </CookiesProvider>
   );
