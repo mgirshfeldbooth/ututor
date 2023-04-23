@@ -24,7 +24,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   has_many :attempts
-  has_many :plans
+  has_many :attempts, foreign_key: :student_id
 
   enum role: { student: "student", tutor: "tutor" }
 end

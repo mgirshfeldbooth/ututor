@@ -11,6 +11,10 @@ import "channels";
 import React from "react";
 import App from "./student_home";
 import { createRoot } from "react-dom/client";
+import "chartkick/chart.js";
+
+
+
 
 Rails.start();
 Turbolinks.start();
