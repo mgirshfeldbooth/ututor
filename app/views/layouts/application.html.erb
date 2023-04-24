@@ -3,18 +3,18 @@
   <head>
     <title>uTutor</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="user_id" content="<%= signed_in? && current_user.id %>" />
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= render "shared/cdn_assets" %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: true %>
 
-    <meta name="user_id" content="<%= signed_in? && current_user.id %>" />
   </head>
 
-  
-    <body>
+  <body>
     <%= render "shared/navbar" %>
 
     <div class="container">
@@ -26,9 +26,9 @@
           <%= render "shared/flash", message: alert, css_class: "danger" %>
         <% end %>
       <% end %>
-      
+
       <%= yield %>
     </div>
-    </body>
+  </body>
 
 </html>
