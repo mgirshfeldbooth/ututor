@@ -138,7 +138,7 @@ function getUserIDFromMetaTag() {
     return metaElement.getAttribute("content");
   } else {
     console.error("Meta tag with user_id not found");
-    return null;
+    return '';
   }
 }
 
