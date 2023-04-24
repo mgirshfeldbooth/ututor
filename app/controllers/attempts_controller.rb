@@ -45,7 +45,7 @@ class AttemptsController < ApplicationController
     current_streak = cookies.fetch(:streak_counter).to_i
 
     if @attempt.correct 
-      if (current_user_level != Exercise.maximum(:difficulty)) and (current_streak == 2)
+      if (current_user_level != Exercise.where( subject_id: @assigned_subject_id ).maximum(:difficulty)) and (current_streak == 2)
         current_user_level += 1
         cookies[:user_level] = current_user_level
       else
@@ -53,7 +53,7 @@ class AttemptsController < ApplicationController
         cookies[:streak_counter] = current_streak
       end
     else
-      if current_user_level != Exercise.minimum(:difficulty)
+      if current_user_level != 0
         current_user_level = current_user_level - 1
         cookies[:streak_counter] = 0
         cookies[:user_level] = current_user_level
