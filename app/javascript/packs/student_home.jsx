@@ -232,7 +232,7 @@ function PracticePlan({
           ) : (
             <Card>
               <CardTitle>Ready to play?</CardTitle>
-              <Subtitle>You will do {numberOfQuestions} exercise(s)</Subtitle>
+              <Subtitle>You will do {numberOfQuestions} exercise(s)</Subtitle> 
               <Button onClick={handleStartPractice}>Go!</Button>
             </Card>
           )}
