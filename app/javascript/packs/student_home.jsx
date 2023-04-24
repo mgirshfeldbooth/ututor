@@ -132,7 +132,14 @@ function QuizCard({ question, clickHandler, handleAnswer }) {
 
 function getUserIDFromMetaTag() {
   const name = "user_id";
-  return document.querySelector(`meta[name='${name}']`).getAttribute("content");
+  const metaElement = document.querySelector(`meta[name='${name}']`);
+  
+  if (metaElement) {
+    return metaElement.getAttribute("content");
+  } else {
+    console.error("Meta tag with user_id not found");
+    return null;
+  }
 }
 
 function Freeplay({
