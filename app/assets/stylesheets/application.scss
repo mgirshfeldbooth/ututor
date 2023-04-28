@@ -1,0 +1,144 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+
+ *,
+ *::before,
+ *::after {
+   box-sizing: border-box;
+ }
+ 
+ * {
+   margin: 0;
+ }
+ 
+ html,
+ body,
+ #root
+ {
+   height: 100%;
+ }
+ 
+ body {
+   line-height: 1.5;
+   -webkit-font-smoothing: antialiased;
+   background-color: #fbfcfd;
+ }
+ 
+ img,
+ picture,
+ video,
+ canvas,
+ svg {
+   display: block;
+   max-width: 100%;
+ }
+ 
+ input,
+ button,
+ textarea,
+ select {
+   font: inherit;
+ }
+ 
+ p,
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6 {
+   overflow-wrap: break-word;
+   padding: 0px;
+ }
+ 
+ #root,
+ #__next {
+   isolation: isolate;
+ }
+ 
+ .custom-navbar-bg {
+  background-color: #0093fb; /* Replace with your desired color in hexadecimal, rgb, or named color format */
+}
+
+.navbar-custom-color {
+  color: white !important; /* Make sure to use !important to override any existing styles */
+}
+
+.navbar-toggler {
+  color: white !important;
+}
+
+.card-header {
+  font-weight: bold;
+  background-color: #0093fb;
+}
+
+.form-control {
+  &:focus {
+    border-color: #0093fb;
+    box-shadow: #0093fb;
+  }
+}
+
+.btn-primary {
+  background-color: #5fcfbc;
+  border-color: #5fcfbc;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #5fcfbc;
+    border-color: #5fcfbc;
+  }
+}
+
+.form-group.text-center {
+  display: flex;
+  justify-content: center;
+}
+
+.devise-links {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.devise-links a {
+  margin-bottom: 0.5rem;
+}
+
+
+table {
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 60%;
+}
+
+th, td {
+  border: 1px solid #0093fb;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #0093fb;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

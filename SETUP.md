@@ -5,5 +5,6 @@
 3. Install `yarn`
 4. Run `yarn`
 5. Install `postgres` and ensure postgres service is running
+   5a. On WSL Ubuntu, the command is `sudo service postgresql start`
 6. Setup DB: `bundle e rails db:setup` and run migrations `bundle e rails db:migrate`
-7. Run the rails server `bundle e rails s`
+7. Run the rails server using `bin/server`
