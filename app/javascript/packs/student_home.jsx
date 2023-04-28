@@ -4,8 +4,8 @@ import React, { useRef, useEffect } from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion/dist/framer-motion";
 import { CookiesProvider, useCookies } from "react-cookie";
-import useWindowSize from 'react-use/lib/useWindowSize';
-import Confetti from 'react-confetti';
+import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
 
 const AppContainer = styled.div`
   color: #202425;
@@ -75,9 +75,6 @@ const ValueInput = styled.input`
   margin-top: 48px;
 `;
 
-
-
-
 // Example of what our exercises object looks like
 // const exercises = [
 //   {
@@ -90,11 +87,11 @@ const ValueInput = styled.input`
 // ];
 
 function QuizCard({ question, clickHandler, handleAnswer }) {
-  function handleKeyDown (event) {
-    if (event.key === 'Enter') {
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
       clickHandler(event);
     }
-  };
+  }
 
   return (
     <Card
@@ -133,12 +130,12 @@ function QuizCard({ question, clickHandler, handleAnswer }) {
 function getUserIDFromMetaTag() {
   const name = "user_id";
   const metaElement = document.querySelector(`meta[name='${name}']`);
-  
+
   if (metaElement) {
     return metaElement.getAttribute("content");
   } else {
     console.error("Meta tag with user_id not found");
-    return '';
+    return "";
   }
 }
 
@@ -239,7 +236,58 @@ function PracticePlan({
           ) : (
             <Card>
               <CardTitle>Ready to play?</CardTitle>
-              <Subtitle>You will do {numberOfQuestions} exercise(s). Go as FAST as you can!</Subtitle> 
+              <Subtitle>You will do {numberOfQuestions} exercise(s).</Subtitle>
+              <Button onClick={handleStartPractice}>Go!</Button>
+            </Card>
+          )}
+        </AnimatePresence>
+      )}
+    </>
+  );
+}
+
+// Functionally the same as PracticePlan
+function Speedround({
+  roundEnded,
+  showExercises,
+  numberOfQuestions,
+  handleStartPractice,
+  currentExercise,
+  handleNextClick,
+  handleAnswer,
+  handleResetApp,
+}) {
+  /*
+    Pull number of problems from plan table for student
+    1. Show student how many problems they are about to perform
+    2. Hit GO -> Same code as before
+  */
+
+  return (
+    <>
+      {roundEnded ? (
+        <Card>
+          <CardTitle>Thanks!</CardTitle>
+          <Subtitle>Round Complete</Subtitle>
+          <Button onClick={handleResetApp}>Reset</Button>
+        </Card>
+      ) : (
+        <AnimatePresence mode={"wait"}>
+          {showExercises ? (
+            <QuizCard
+              question={currentExercise}
+              clickHandler={handleNextClick}
+              handleAnswer={handleAnswer}
+            />
+          ) : (
+            <Card>
+              <CardTitle>Ready to play?</CardTitle>
+              <Subtitle>
+                You will do {numberOfQuestions} exercise(s).
+                <br />
+                This is all about <b>SPEED</b>. Complete the round as{" "}
+                <b>FAST</b> as you can!
+              </Subtitle>
               <Button onClick={handleStartPractice}>Go!</Button>
             </Card>
           )}
@@ -263,8 +311,7 @@ export default function App() {
   const currentUserID = getUserIDFromMetaTag();
   const [cookies, setCookie] = useCookies();
   const roundID = cookies["current_round"];
-  const { width, height } = useWindowSize()
-
+  const { width, height } = useWindowSize();
 
   let roundEnded = false;
 
@@ -310,6 +357,11 @@ export default function App() {
       return;
     }
 
+    // Check if field has value, show error
+    if (!submission) {
+      return;
+    }
+
     setQuestionCount(questionCount + 1);
 
     /*
@@ -333,9 +385,9 @@ export default function App() {
     if (!response.ok) throw Error(response.statusText);
 
     if (currentExercise.answer == submission) {
-      setShowConfetti(true)
+      setShowConfetti(true);
       setTimeout(() => {
-        setShowConfetti(false)
+        setShowConfetti(false);
       }, 3000);
     }
     // TODO: This could be an exercise OR could be the end of the round
@@ -343,6 +395,7 @@ export default function App() {
 
     // This returns something different when all the exercises have been completed
     setCurrentExercise(exercise);
+    setSubmission(null);
   }
 
   function handleChange(event) {
@@ -359,7 +412,7 @@ export default function App() {
     if (planSelected === "freeplay") {
       // Show initial choose exercises screen
       return;
-    } else if (planSelected === "practice") {
+    } else if (planSelected === "practice" || planSelected === "speedround") {
       const response = await fetch("/rounds", {
         method: "POST",
         body: JSON.stringify({ query_plan_selected: planSelected }),
@@ -395,66 +448,79 @@ export default function App() {
   return (
     <CookiesProvider>
       <AppContainer>
+        {!planSelected && (
+          <Card>
+            <CardTitle>Welcome!</CardTitle>
+            <Subtitle>
+              Would you like to practice your tutor's plan or free play?
+            </Subtitle>
+            <Button
+              onClick={() => {
+                changePlanSelected("practice");
+              }}
+            >
+              Practice Plan
+            </Button>
 
-      
+            <Button
+              onClick={() => {
+                changePlanSelected("speedround");
+              }}
+            >
+              Speed Round
+            </Button>
 
-          {!planSelected && (
-            <Card>
-              <CardTitle>Welcome!</CardTitle>
-              <Subtitle>Would you like to practice your tutor's plan or free play?</Subtitle>
-              <Button
-                onClick={() => {
-                  changePlanSelected("practice");
-                }}
-              >
-                Practice Plan
-              </Button>
+            <Button
+              onClick={() => {
+                changePlanSelected("freeplay");
+              }}
+            >
+              Free Play
+            </Button>
+          </Card>
+        )}
 
-              <Button
-                onClick={() => {
-                  changePlanSelected("freeplay");
-                }}
-              >
-                Free Play
-              </Button>
+        {planSelected === "freeplay" && (
+          <Freeplay
+            roundEnded={roundEnded}
+            showExercises={showExercises}
+            currentExercise={currentExercise}
+            handleNextClick={handleNextClick}
+            handleAnswer={handleAnswer}
+            handleChange={handleChange}
+            numberOfQuestions={numberOfQuestions}
+            handleShowExercises={handleShowExercises}
+            handleResetApp={handleResetApp}
+          ></Freeplay>
+        )}
 
+        {planSelected === "speedround" && (
+          <Speedround
+            numberOfQuestions={numberOfQuestions}
+            handleStartPractice={handleStartPractice}
+            roundEnded={roundEnded}
+            currentExercise={currentExercise}
+            handleNextClick={handleNextClick}
+            handleAnswer={handleAnswer}
+            showExercises={showExercises}
+            handleResetApp={handleResetApp}
+          ></Speedround>
+        )}
 
-              
-            </Card>
-          )}
+        {planSelected === "practice" && (
+          <PracticePlan
+            numberOfQuestions={numberOfQuestions}
+            handleStartPractice={handleStartPractice}
+            roundEnded={roundEnded}
+            currentExercise={currentExercise}
+            handleNextClick={handleNextClick}
+            handleAnswer={handleAnswer}
+            showExercises={showExercises}
+            handleResetApp={handleResetApp}
+          ></PracticePlan>
+        )}
 
-          {planSelected === "freeplay" && (
-            <Freeplay
-              roundEnded={roundEnded}
-              showExercises={showExercises}
-              currentExercise={currentExercise}
-              handleNextClick={handleNextClick}
-              handleAnswer={handleAnswer}
-              handleChange={handleChange}
-              numberOfQuestions={numberOfQuestions}
-              handleShowExercises={handleShowExercises}
-              handleResetApp={handleResetApp}
-            ></Freeplay>
-          )}
-
-          {planSelected === "practice" && (
-            <PracticePlan
-              numberOfQuestions={numberOfQuestions}
-              handleStartPractice={handleStartPractice}
-              roundEnded={roundEnded}
-              currentExercise={currentExercise}
-              handleNextClick={handleNextClick}
-              handleAnswer={handleAnswer}
-              showExercises={showExercises}
-              handleResetApp={handleResetApp}
-            ></PracticePlan>
-          )}
-   
-      
-          {showConfetti && <Confetti
-            width={width}
-            height={height}
-          />}
+        {showConfetti && <Confetti width={width} height={height} />}
       </AppContainer>
     </CookiesProvider>
   );

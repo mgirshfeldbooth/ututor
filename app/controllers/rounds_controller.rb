@@ -31,7 +31,7 @@ class RoundsController < ApplicationController
       if plan_selected == "freeplay"
           # FREE PLAY PLAN
         round_length = params.fetch("query_round_length", 10)
-      elsif plan_selected == "practice"
+      elsif plan_selected == "practice" or plan_selected == "speedround"
         # TUTOR PRACTICE PLAN
         if plan
           round_length = Plan.find_by(student_email: current_user.email).round_size
@@ -51,11 +51,11 @@ class RoundsController < ApplicationController
 
     respond_to do |format|
       if @round.save
-        if plan_selected == "freeplay"
+        if plan_selected == "freeplay" 
           # FREE PLAY PLAN
           format.html { redirect_to exercise_path(Exercise.where( difficulty: 0 ).shuffle.first.id), notice: "Round was successfully created." }
           exercise = Exercise.where( difficulty: 0 ).shuffle.first
-        elsif plan_selected == "practice"
+        elsif plan_selected == "practice" or plan_selected == "speedround"
           # TUTOR PRACTICE PLAN
           if plan
             exercise = Exercise.joins(:subject).where(difficulty: 0, subjects: { id: @assigned_subject_id }).shuffle.first
