@@ -5,6 +5,9 @@
 #  id                     :bigint           not null, primary key
 #  email                  :citext           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  grade                  :integer
+#  organization           :string
+#  parent_email           :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string

@@ -388,7 +388,7 @@ export default function App() {
       setShowConfetti(true);
       setTimeout(() => {
         setShowConfetti(false);
-      }, 3000);
+      }, 2000);
     }
     // TODO: This could be an exercise OR could be the end of the round
     const exercise = await response.json();

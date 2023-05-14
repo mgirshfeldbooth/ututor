@@ -1,7 +1,7 @@
 namespace :populate_attempts do
   desc "Populate attempts table with 10 days of data for user_id 2 (Stu)"
   task create_attempts: :environment do
-    user_id = 3
+    user_id = 7
     exercises = Exercise.all
 
     10.times do |i|
@@ -28,6 +28,6 @@ namespace :populate_attempts do
       end
     end
 
-    puts "Finished populating attempts table with 10 days of data for user_id 2."
+    puts "Finished populating attempts table with 10 days of data for this user."
   end
 end
